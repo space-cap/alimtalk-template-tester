@@ -32,6 +32,7 @@ public class HelloWorldApp extends Application {
     private MenuItem logoutItem;
     private MenuItem settingsItem;
     private MenuItem mainItem;
+    private MenuItem templateItem;
     private String currentUserEmail;
     private String currentAccessToken;
     private String currentRefreshToken;
@@ -86,13 +87,19 @@ public class HelloWorldApp extends Application {
 
         userMenu.getItems().addAll(loginItem, signupItem, new SeparatorMenuItem(), logoutItem);
 
+        // 템플릿 메뉴
+        Menu templateMenu = new Menu("템플릿");
+        templateItem = new MenuItem("알림톡 템플릿 생성");
+        templateItem.setOnAction(e -> showTemplateScreen());
+        templateMenu.getItems().add(templateItem);
+
         // 설정 메뉴
         Menu settingsMenu = new Menu("설정");
         settingsItem = new MenuItem("환경설정");
         settingsItem.setOnAction(e -> showSettingsScreen());
         settingsMenu.getItems().add(settingsItem);
 
-        menuBar.getMenus().addAll(homeMenu, userMenu, settingsMenu);
+        menuBar.getMenus().addAll(homeMenu, userMenu, templateMenu, settingsMenu);
 
         updateMenuVisibility();
 
@@ -295,6 +302,21 @@ public class HelloWorldApp extends Application {
             rootLayout.setCenter(settingsScreen);
         } catch (IOException e) {
             System.err.println("Error loading settings screen: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void showTemplateScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/template.fxml"));
+            if (loader.getLocation() == null) {
+                System.err.println("Could not find template.fxml");
+                return;
+            }
+            BorderPane templateScreen = loader.load();
+            rootLayout.setCenter(templateScreen);
+        } catch (IOException e) {
+            System.err.println("Error loading template screen: " + e.getMessage());
             e.printStackTrace();
         }
     }

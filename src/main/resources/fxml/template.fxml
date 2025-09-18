@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ezlevup.controller.TemplateController" style="-fx-background-color: #f5f5f5;">
+   <left>
+      <!-- Left Sidebar - Icon-based like Claude desktop -->
+      <VBox prefWidth="60.0" style="-fx-background-color: #2c2c2c; -fx-spacing: 8;">
+         <children>
+            <!-- Top Icons -->
+            <VBox spacing="8.0" style="-fx-padding: 12 8 8 8; -fx-alignment: center;">
+               <children>
+                  <!-- Claude Icon -->
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #ff6b35; -fx-font-size: 20px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="✦" onAction="#createNewChat" />
+
+                  <!-- Separator -->
+                  <Region prefHeight="8.0" />
+
+                  <!-- Chat Icons -->
+                  <Button style="-fx-background-color: #ff6b35; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="💬" onAction="#loadCurrentTemplate" />
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="🏫" onAction="#loadTemplate1" />
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="☕" onAction="#loadTemplate2" />
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="📦" onAction="#loadTemplate3" />
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="🏥" onAction="#loadTemplate4" />
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="🎉" onAction="#loadTemplate5" />
+               </children>
+            </VBox>
+
+            <!-- Bottom spacer -->
+            <Region VBox.vgrow="ALWAYS" />
+
+            <!-- Bottom Icons -->
+            <VBox style="-fx-padding: 8; -fx-alignment: center;">
+               <children>
+                  <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 16px; -fx-padding: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-border: none; -fx-min-width: 40; -fx-min-height: 40;" text="⚙️" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+
+   <center>
+      <!-- Main Chat Panel -->
+      <SplitPane fx:id="mainSplitPane" dividerPositions="0.65" style="-fx-background-color: #ffffff;">
+         <items>
+            <!-- Chat Area -->
+            <VBox style="-fx-background-color: #ffffff;">
+               <children>
+                  <!-- Chat Header -->
+                  <HBox fx:id="chatHeader" alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 16; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+                     <children>
+                        <Label fx:id="chatTitleLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="새 대화" />
+                     </children>
+                  </HBox>
+
+                  <!-- Chat Messages -->
+                  <ScrollPane fx:id="chatScrollPane" fitToWidth="true" style="-fx-background-color: #ffffff; -fx-background: #ffffff;" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="chatMessagesBox" spacing="16.0" style="-fx-padding: 20; -fx-background-color: #ffffff;">
+                           <!-- Messages will be added dynamically -->
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+
+                  <!-- Chat Input -->
+                  <VBox style="-fx-padding: 20 20 30 20; -fx-background-color: #ffffff;">
+                     <children>
+                        <!-- Input Container -->
+                        <VBox spacing="8.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 12;">
+                           <children>
+                              <!-- Main Input Area -->
+                              <HBox spacing="8.0" alignment="BOTTOM_CENTER">
+                                 <children>
+                                    <TextArea fx:id="requestTextArea" prefRowCount="1" maxHeight="120.0" promptText="Claude에게 메시지 보내기..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14px; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-text-fill: #333333;" wrapText="true" HBox.hgrow="ALWAYS" />
+
+                                    <!-- Send Button -->
+                                    <Button fx:id="sendButton" onAction="#handleSendMessage" style="-fx-background-color: #ff6b35; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 8 12; -fx-min-width: 60; -fx-pref-height: 32;" text="전송" />
+                                 </children>
+                              </HBox>
+
+                              <!-- Bottom Actions -->
+                              <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
+                                 <children>
+                                    <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 12px; -fx-cursor: hand; -fx-border: none; -fx-padding: 4 8;" text="📎 파일 첨부" />
+                                    <Button style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 12px; -fx-cursor: hand; -fx-border: none; -fx-padding: 4 8;" text="⚡ 빠른 템플릿" />
+
+                                    <!-- Spacer -->
+                                    <Region HBox.hgrow="ALWAYS" />
+
+                                    <!-- Character Count -->
+                                    <Label fx:id="characterCountLabel" style="-fx-font-size: 11px; -fx-text-fill: #999999;" text="0/2000" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+
+                        <!-- Hint Text -->
+                        <Label style="-fx-font-size: 11px; -fx-text-fill: #999999; -fx-padding: 8 0 0 0;" text="Claude는 실수를 할 수 있습니다. 중요한 정보는 확인해 주세요." />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+
+            <!-- Right Preview Panel -->
+            <VBox style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 0 1;">
+               <children>
+                  <!-- Preview Header -->
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 16; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+                     <children>
+                        <Label fx:id="previewTitleLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="템플릿 미리보기" />
+                     </children>
+                  </HBox>
+
+                  <!-- Preview Content -->
+                  <ScrollPane fitToWidth="true" style="-fx-background-color: #ffffff; -fx-background: #ffffff;" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="previewBox" spacing="16.0" style="-fx-padding: 16;">
+                           <!-- Preview content will be added dynamically -->
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>
