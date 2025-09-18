@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ezlevup.controller.LoginController">
+   <children>
+      <VBox alignment="CENTER" maxHeight="400.0" maxWidth="350.0" spacing="20.0">
+         <children>
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="로그인" />
+
+            <VBox spacing="10.0">
+               <children>
+                  <Label text="이메일:" />
+                  <TextField fx:id="emailField" promptText="이메일을 입력하세요" text="lee2@naver.com" />
+               </children>
+            </VBox>
+
+            <VBox spacing="10.0">
+               <children>
+                  <Label text="비밀번호:" />
+                  <PasswordField fx:id="passwordField" promptText="비밀번호를 입력하세요" text="test1234" />
+               </children>
+            </VBox>
+
+            <Button fx:id="loginButton" onAction="#handleLogin" prefWidth="200.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px;" text="로그인" />
+
+            <Label fx:id="testAccountLabel" onMouseClicked="#handleTestAccountClick" style="-fx-text-fill: #2196F3; -fx-font-size: 12px; -fx-underline: true; -fx-cursor: hand;" text="테스트 계정: lee2@naver.com / test1234" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>

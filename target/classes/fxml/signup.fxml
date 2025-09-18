@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ezlevup.controller.SignupController">
+   <children>
+      <VBox alignment="CENTER" maxHeight="500.0" maxWidth="400.0" spacing="15.0">
+         <children>
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="회원가입" />
+
+            <VBox spacing="10.0">
+               <children>
+                  <Label text="이메일:" />
+                  <HBox spacing="10.0">
+                     <children>
+                        <TextField fx:id="emailField" promptText="이메일을 입력하세요" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="requestVerificationButton" onAction="#handleRequestVerification" text="인증요청" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <VBox spacing="10.0">
+               <children>
+                  <Label text="비밀번호:" />
+                  <PasswordField fx:id="passwordField" promptText="비밀번호를 입력하세요" />
+               </children>
+            </VBox>
+
+            <VBox spacing="10.0">
+               <children>
+                  <Label text="비밀번호 확인:" />
+                  <PasswordField fx:id="confirmPasswordField" promptText="비밀번호를 다시 입력하세요" />
+               </children>
+            </VBox>
+
+            <VBox spacing="10.0">
+               <children>
+                  <Label text="닉네임:" />
+                  <TextField fx:id="nicknameField" promptText="닉네임을 입력하세요" />
+               </children>
+            </VBox>
+
+            <Button fx:id="signupButton" onAction="#handleSignup" prefWidth="200.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" text="가입하기" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>

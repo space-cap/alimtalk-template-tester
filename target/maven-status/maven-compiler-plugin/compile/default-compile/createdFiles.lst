@@ -1,0 +1,10 @@
+com\ezlevup\controller\SignupController.class
+com\ezlevup\controller\LoginController.class
+com\ezlevup\controller\LoginController$1.class
+com\ezlevup\util\Settings.class
+com\ezlevup\HelloWorldApp$1.class
+com\ezlevup\controller\MainController.class
+module-info.class
+com\ezlevup\controller\MainController$1.class
+com\ezlevup\controller\SettingsController.class
+com\ezlevup\HelloWorldApp.class

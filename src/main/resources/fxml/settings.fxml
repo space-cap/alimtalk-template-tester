@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ezlevup.controller.SettingsController">
+   <children>
+      <VBox alignment="CENTER" maxHeight="500.0" maxWidth="600.0" spacing="25.0">
+         <children>
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" text="설정" />
+
+            <VBox spacing="20.0" style="-fx-background-color: #f5f5f5; -fx-padding: 20; -fx-background-radius: 10;">
+               <children>
+                  <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="API 설정" />
+
+                  <VBox spacing="10.0">
+                     <children>
+                        <Label text="API 서버 URL:" />
+                        <TextField fx:id="apiUrlField" promptText="예: http://localhost:8580" style="-fx-font-size: 14px;" />
+                        <Label style="-fx-text-fill: gray; -fx-font-size: 12px;" text="API 서버의 기본 URL을 입력하세요. 프로토콜(http:// 또는 https://)을 포함해야 합니다." />
+                     </children>
+                  </VBox>
+
+                  <HBox alignment="CENTER" spacing="15.0">
+                     <children>
+                        <Button fx:id="saveButton" onAction="#handleSave" prefWidth="100.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10;" text="저장" />
+                        <Button fx:id="resetButton" onAction="#handleReset" prefWidth="100.0" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10;" text="기본값" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <VBox spacing="15.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-width: 1; -fx-padding: 20; -fx-background-radius: 10;">
+               <children>
+                  <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="설정 정보" />
+
+                  <VBox spacing="8.0">
+                     <children>
+                        <Label style="-fx-font-size: 14px;" text="• API URL: 인증 및 로그아웃 API 서버 주소" />
+                        <Label style="-fx-font-size: 14px;" text="• 기본값: http://localhost:8580" />
+                        <Label style="-fx-font-size: 14px;" text="• 설정은 자동으로 저장되며 다음 실행 시에도 유지됩니다" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>
