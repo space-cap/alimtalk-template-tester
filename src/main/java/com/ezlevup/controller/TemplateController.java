@@ -206,7 +206,8 @@ public class TemplateController {
         messageHeader.getChildren().add(userLabel);
 
         Label messageContent = new Label(message);
-        messageContent.setStyle("-fx-font-size: 13px; -fx-text-fill: #333333; -fx-background-color: #e3f2fd; -fx-padding: 12; -fx-background-radius: 12; -fx-max-width: 400;");
+        messageContent.setStyle(
+                "-fx-font-size: 13px; -fx-text-fill: #333333; -fx-background-color: #e3f2fd; -fx-padding: 12; -fx-background-radius: 12; -fx-max-width: 400;");
         messageContent.setWrapText(true);
 
         userMessageBox.getChildren().addAll(messageHeader, messageContent);
@@ -239,7 +240,8 @@ public class TemplateController {
         messageHeader.getChildren().addAll(systemIcon, systemLabel);
 
         Label messageContent = new Label(message);
-        messageContent.setStyle("-fx-font-size: 13px; -fx-text-fill: #333333; -fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 12; -fx-max-width: 400;");
+        messageContent.setStyle(
+                "-fx-font-size: 13px; -fx-text-fill: #333333; -fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 12; -fx-max-width: 400;");
         messageContent.setWrapText(true);
 
         systemMessageBox.getChildren().addAll(messageHeader, messageContent);
@@ -270,7 +272,8 @@ public class TemplateController {
 
         // Template container
         VBox templateContainer = new VBox(8.0);
-        templateContainer.setStyle("-fx-background-color: #fff3e0; -fx-padding: 16; -fx-background-radius: 12; -fx-border-color: #ffcc80; -fx-border-width: 1; -fx-border-radius: 12; -fx-max-width: 500;");
+        templateContainer.setStyle(
+                "-fx-background-color: #fff3e0; -fx-padding: 16; -fx-background-radius: 12; -fx-border-color: #ffcc80; -fx-border-width: 1; -fx-border-radius: 12; -fx-max-width: 500;");
 
         Label titleLabel = new Label("✅ 템플릿이 생성되었습니다!");
         titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;");
@@ -282,7 +285,8 @@ public class TemplateController {
         contentLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333333;");
 
         Label templateContentLabel = new Label(templateContent);
-        templateContentLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666; -fx-background-color: #ffffff; -fx-padding: 8; -fx-background-radius: 6;");
+        templateContentLabel.setStyle(
+                "-fx-font-size: 12px; -fx-text-fill: #666666; -fx-background-color: #ffffff; -fx-padding: 8; -fx-background-radius: 6;");
         templateContentLabel.setWrapText(true);
 
         templateContainer.getChildren().addAll(titleLabel, templateTitleLabel, contentLabel, templateContentLabel);
@@ -299,24 +303,40 @@ public class TemplateController {
     }
 
     private void createTemplateWithAPI(String requestContent) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)  // HTTP/1.1 강제
+                .build();
         ObjectMapper mapper = new ObjectMapper();
 
-        // Create request body
+        // Create request body for FastAPI (curl 테스트와 동일한 구조)
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("userId", 123); // Example user ID
-        requestBody.put("requestContent", requestContent);
+        requestBody.put("userId", 123); // curl과 동일하게 camelCase 사용
+        requestBody.put("requestContent", requestContent); // curl과 동일하게 camelCase 사용
+        requestBody.put("conversationContext", ""); // 누락된 필수 필드 추가
 
         String jsonBody = mapper.writeValueAsString(requestBody);
 
+        // Console output for debugging
+        System.out.println("Request JSON Body: " + jsonBody);
+        System.out.println("JSON Body Length: " + jsonBody.length());
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://13.125.220.162:8000/ai/templates"))
+                .uri(URI.create("http://3.34.43.149:8000/ai/templates"))
+                .header("Accept-Encoding", "gzip, deflate")
+                .header("Cache-Control", "no-cache")
                 .header("Content-Type", "application/json")
-                .header("accept", "*/*")
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
+                .header("accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Console output for debugging
+        System.out.println("Request Headers: " + request.headers().map());
+        System.out.println("Response Status Code: " + response.statusCode());
+        System.out.println("Response Headers: " + response.headers().map());
+        System.out.println("Response Body: " + response.body());
 
         Platform.runLater(() -> {
             try {
@@ -346,9 +366,8 @@ public class TemplateController {
             String content = (String) response.get("content");
 
             addTemplateMessage(
-                title != null ? title : "알림톡 템플릿",
-                content != null ? content : "템플릿 내용이 생성되었습니다."
-            );
+                    title != null ? title : "알림톡 템플릿",
+                    content != null ? content : "템플릿 내용이 생성되었습니다.");
 
         } catch (Exception e) {
             addSystemMessage("템플릿이 생성되었습니다!\n\n" + responseBody);
@@ -373,7 +392,8 @@ public class TemplateController {
         // Loading animation container
         HBox loadingContainer = new HBox(8.0);
         loadingContainer.setAlignment(Pos.CENTER_LEFT);
-        loadingContainer.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 12; -fx-max-width: 400;");
+        loadingContainer.setStyle(
+                "-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 12; -fx-max-width: 400;");
 
         Label loadingIcon = new Label("⚡");
         loadingIcon.setStyle("-fx-font-size: 16px;");
@@ -387,14 +407,13 @@ public class TemplateController {
         chatMessagesBox.getChildren().add(loadingMessageBox);
 
         // Create loading animation - rotating through different icons
-        String[] icons = {"⚡", "💫", "✨", "🔄", "💭", "🧠"};
+        String[] icons = { "⚡", "💫", "✨", "🔄", "💭", "🧠" };
         loadingAnimation = new Timeline();
 
         for (int i = 0; i < icons.length; i++) {
             final String icon = icons[i];
             loadingAnimation.getKeyFrames().add(
-                new KeyFrame(Duration.millis((i + 1) * 300), e -> loadingIcon.setText(icon))
-            );
+                    new KeyFrame(Duration.millis((i + 1) * 300), e -> loadingIcon.setText(icon)));
         }
 
         loadingAnimation.setCycleCount(Timeline.INDEFINITE);
