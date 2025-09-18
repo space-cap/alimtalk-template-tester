@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
@@ -60,7 +61,7 @@ public class TemplateController {
         previewTitleLabel.setText("템플릿 미리보기");
 
         // Enable resizable split pane
-        mainSplitPane.setDividerPositions(0.65);
+        mainSplitPane.setDividerPositions(0.5);
 
         // Auto-scroll chat to bottom - remove binding as we'll control it manually
         // chatScrollPane.vvalueProperty().bind(chatMessagesBox.heightProperty());
@@ -304,7 +305,7 @@ public class TemplateController {
 
     private void createTemplateWithAPI(String requestContent) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)  // HTTP/1.1 강제
+                .version(HttpClient.Version.HTTP_1_1) // HTTP/1.1 강제
                 .build();
         ObjectMapper mapper = new ObjectMapper();
 
@@ -325,7 +326,8 @@ public class TemplateController {
                 .header("Accept-Encoding", "gzip, deflate")
                 .header("Cache-Control", "no-cache")
                 .header("Content-Type", "application/json")
-                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
+                .header("User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
                 .header("accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
@@ -342,9 +344,10 @@ public class TemplateController {
             try {
                 removeLoadingMessage();
                 if (response.statusCode() == 200) {
-                    // Parse response and add to chat
+                    // Parse response and add to preview panel instead of chat
                     String responseBody = response.body();
                     processTemplateResponse(responseBody);
+                    addSystemMessage("템플릿이 생성되었습니다! 오른쪽 미리보기를 확인해주세요.");
                 } else {
                     addSystemMessage("템플릿 생성에 실패했습니다: " + response.body());
                 }
@@ -365,13 +368,94 @@ public class TemplateController {
             String title = (String) response.get("title");
             String content = (String) response.get("content");
 
-            addTemplateMessage(
+            // Add template to preview panel instead of chat
+            addTemplateToPreview(
                     title != null ? title : "알림톡 템플릿",
                     content != null ? content : "템플릿 내용이 생성되었습니다.");
 
         } catch (Exception e) {
-            addSystemMessage("템플릿이 생성되었습니다!\n\n" + responseBody);
+            // If JSON parsing fails, show raw response in preview
+            addTemplateToPreview("생성된 템플릿", responseBody);
         }
+    }
+
+    private void addTemplateToPreview(String templateTitle, String templateContent) {
+        // Clear existing preview content
+        previewBox.getChildren().clear();
+
+        // Create Claude desktop style message bubble
+        VBox messageContainer = new VBox(8.0);
+        messageContainer.setAlignment(Pos.TOP_LEFT); // 또는 CENTER_LEFT
+        messageContainer.setStyle("-fx-padding: 16 20;");
+
+        // Message header with Claude icon and name
+        HBox headerBox = new HBox(8.0);
+        headerBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label claudeIcon = new Label("☁");
+        claudeIcon.setStyle(
+                "-fx-font-size: 14px; -fx-text-fill: #888888; -fx-background-color: #f5f5f5; -fx-background-radius: 50%; -fx-padding: 4; -fx-min-width: 24; -fx-min-height: 24; -fx-alignment: center;");
+
+        Label claudeLabel = new Label("Claude");
+        claudeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #666666; -fx-font-weight: bold;");
+
+        headerBox.getChildren().addAll(claudeIcon, claudeLabel);
+
+        // Main content bubble (matching image7.png style)
+        VBox contentBubble = new VBox(12.0);
+        contentBubble.setAlignment(Pos.TOP_LEFT); // 추가
+        contentBubble.setStyle(
+                "-fx-background-color: #ffffff; -fx-padding: 16; -fx-background-radius: 12; -fx-border-color: #e8e8e8; -fx-border-width: 1; -fx-border-radius: 12; -fx-max-width: 400;");
+
+        // Header text
+        Label headerText = new Label("주문이 완료되었습니다!");
+        headerText.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+
+        System.out.println("templateContent: " + templateContent);
+
+        // Main template content - use TextArea for better text handling
+        TextArea mainContent = new TextArea(templateContent);
+        mainContent.setStyle(
+                "-fx-font-size: 13px; -fx-text-fill: #333333; -fx-background-color: transparent; -fx-border-color: transparent; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        mainContent.setWrapText(true);
+        mainContent.setEditable(false);
+        mainContent.setMaxWidth(350);
+        mainContent.setPrefWidth(350);
+        mainContent.setPrefRowCount(20); // 충분한 행 수
+        mainContent.setMaxHeight(Double.MAX_VALUE);
+        mainContent.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // Footer with copy icon (matching image7.png)
+        HBox footerBox = new HBox();
+        footerBox.setAlignment(Pos.CENTER_RIGHT);
+        footerBox.setStyle("-fx-padding: 8 0 0 0;");
+
+        Button copyButton = new Button("📄");
+        copyButton.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 14px; -fx-cursor: hand; -fx-border: none; -fx-padding: 4; -fx-background-radius: 4;");
+        copyButton.setOnAction(e -> {
+            // TODO: Implement copy functionality
+            System.out.println("Template copied to clipboard");
+        });
+
+        footerBox.getChildren().add(copyButton);
+
+        // Add elements to content bubble
+        contentBubble.getChildren().addAll(headerText, mainContent, footerBox);
+        // contentBubble.getChildren().addAll(mainContent);
+
+        // Add header and bubble to message container
+        messageContainer.getChildren().addAll(headerBox, contentBubble);
+
+        // 부모 VBox의 높이 제한도 확인
+        previewBox.setMaxHeight(Double.MAX_VALUE);
+        // previewBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        previewBox.setAlignment(Pos.TOP_LEFT); // FXML에서 설정하거나 코드로 추가
+
+        // Add the message to preview box
+        previewBox.getChildren().add(messageContainer);
+
     }
 
     private void addLoadingMessage() {

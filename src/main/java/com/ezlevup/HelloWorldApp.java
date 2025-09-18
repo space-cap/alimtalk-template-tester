@@ -57,8 +57,10 @@ public class HelloWorldApp extends Application {
         MenuBar menuBar = createMenuBar();
         rootLayout.setTop(menuBar);
 
-        Scene scene = new Scene(rootLayout, 800, 600);
+        Scene scene = new Scene(rootLayout, 1200, 800);
         primaryStage.setScene(scene);
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(700);
         primaryStage.show();
     }
 

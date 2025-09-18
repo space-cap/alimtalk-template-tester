@@ -43,7 +43,7 @@
 
    <center>
       <!-- Main Chat Panel -->
-      <SplitPane fx:id="mainSplitPane" dividerPositions="0.65" style="-fx-background-color: #ffffff;">
+      <SplitPane fx:id="mainSplitPane" dividerPositions="0.5" style="-fx-background-color: #ffffff;">
          <items>
             <!-- Chat Area -->
             <VBox style="-fx-background-color: #ffffff;">
